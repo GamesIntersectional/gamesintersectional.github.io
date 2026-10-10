@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO & Meta Tags -->
+  <title>Games Intersectional Roundtables | Community for Games and Intersectional Play</title>
+  <meta name="description" content="Games Intersectional Roundtables (GIRT) is a community space for marginalized people and allies in games, game studies, art, and academia.">
+  <link rel="canonical" href="https://gamesintersectional.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gamesintersectional.github.io/">
+  <meta property="og:title" content="Games Intersectional Roundtables">
+  <meta property="og:description" content="A community space for games, care, resistance, and playful solidarity.">
+  <meta name="theme-color" content="#ffb1d6">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Atkinson Hyperlegible"', 'sans-serif'],
+            display: ['"Comfortaa"', 'cursive'],
+          },
+          colors: {
+            girt: {
+              dark: '#2e1740',
+              purple: '#5a4d79',
+              pink: '#cc00cc',
+              lightpink: '#ffb1d6',
+              bg1: '#ffd6ef',
+              bg2: '#dbe7ff',
+            }
+          },
+          animation: {
+            'gradient-x': 'gradient-x 15s ease infinite',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            'gradient-x': {
+              '0%, 100%': {
+                'background-size': '200% 200%',
+                'background-position': 'left center'
+              },
+              '50%': {
+                'background-size': '200% 200%',
+                'background-position': 'right center'
+              },
+            },
+            'float': {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Animated Gradient Background */
+    body {
+      background: linear-gradient(-45deg, #ffd6ef, #dbe7ff, #e8ffe6, #fff0f7);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #2e1740;
+      min-height: 100vh;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Glassmorphism Utilities */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(46, 23, 64, 0.05);
+    }
+
+    /* SPA Transition States */
+    .page-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .page-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Floating Navigation */
+    .nav-pill {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-link {
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.9);
+      color: #cc00cc;
+    }
+    .nav-link.active {
+      background: #cc00cc;
+      color: white;
+      box-shadow: 0 4px 15px rgba(204, 0, 204, 0.3);
+    }
+
+    /* Schedule Styles (Refined) */
+    .schedule { list-style: none; padding: 0; margin: 1.5rem 0; }
+    .slot {
+      display: grid; grid-template-columns: 130px 1fr; gap: 1rem; align-items: start;
+      padding: 1.2rem; margin: 0.8rem 0; 
+      background: rgba(255, 255, 255, 0.9);
+      border-left: 6px solid #b483e3;
+      border-radius: 16px; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .slot:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(46, 23, 64, 0.08);
+    }
+    .slot .when { font-weight: 700; color: #5a4d79; font-family: 'Comfortaa', cursive; }
+    .slot .title { font-size: 1.1rem; margin-bottom: 0.3rem; font-weight: bold; color: #2e1740; }
+    .slot .speaker { color: #666; font-size: 0.95rem; }
+    .slot .meta { display: inline-flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+    
+    /* Accessible High-Contrast Chips */
+    .chip { font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 999px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+    .chip.talk { background: #ffeae6; color: #9a003f; }
+    .chip.demo { background: #e6fbff; color: #005a63; }
+    .chip.panel { background: #fff0f7; color: #7b0050; }
+    .chip.performance { background: #ffecc7; color: #734400; }
+    .chip.case { background: #e6f3ff; color: #123e85; }
+    .chip.essay { background: #f1e6ff; color: #552491; }
+    .chip.art { background: #e8ffe6; color: #0e662d; }
+    .chip.opening { background: #e6e6ff; color: #28287a; }
+    .chip.break { background: #fef4c4; color: #594d00; }
+    .chip.brunch { background: #fff5e6; color: #594d00; }
+
+    @media (max-width: 700px) {
+      .slot { grid-template-columns: 1fr; padding: 1rem; }
+      .slot .when { margin-bottom: 0.25rem; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 0.5rem; }
+    }
+
+    /* Cute details */
+    .emoji-float {
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="flex flex-col text-lg">
+
+  <!-- Floating Navigation -->
+  <div class="fixed w-full top-4 z-50 px-4 pointer-events-none">
+    <nav class="glass-panel mx-auto max-w-4xl rounded-full p-2 flex flex-wrap justify-center gap-1 shadow-lg pointer-events-auto border-white/80">
+      <button class="nav-link active px-4 py-2 rounded-full font-bold text-girt-dark" onclick="showPage('home', this)">Home</button>
+      <button class="nav-link px-4 py-2 rounded-full font-bold text-girt-dark" onclick="showPage('about', this)">About</button>
+      <button class="nav-link px-4 py-2 rounded-full font-bold text-girt-dark" onclick="showPage('events', this)">Events</button>
+      <button class="nav-link px-4 py-2 rounded-full font-bold text-girt-dark" onclick="showPage('gis25', this)">GIS25 Archive</button>
+      <button class="nav-link px-4 py-2 rounded-full font-bold text-girt-dark" onclick="showPage('join', this)">Join</button>
+    </nav>
+  </div>
+
+  <!-- Header Padding for Fixed Nav -->
+  <div class="pt-32 pb-8 px-4 text-center flex flex-col items-center">
+    <img src="Screenshot%202026-04-24%20121018.png" alt="GIRT logo: a pink handheld game console with yellow lettering" class="w-64 md:w-80 max-w-full h-auto rounded-2xl object-contain mb-4 drop-shadow-xl animate-float" onerror="this.style.display='none'">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-girt-dark drop-shadow-sm font-display tracking-tight leading-tight mb-2">
+      Games Intersectional
+    </h1>
+    <p class="text-2xl md:text-3xl text-girt-purple font-display font-bold opacity-90">Roundtables</p>
+  </div>
+
+  <main class="max-w-4xl mx-auto p-4 md:p-6 flex-grow w-full mb-12">
+    
+    <section id="home" class="page-section active glass-panel rounded-[2rem] p-8 md:p-12">
+      <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark mb-6 text-center leading-tight">
+        A community space for games, care, resistance, and playful solidarity.
+      </h2>
+      
+      <div class="space-y-6 text-girt-dark/90 text-lg md:text-xl leading-relaxed">
+        <p>
+          We bring together people from marginalized communities — and those who want to support them — across game studies, game development, art, academia, and play. 
+        </p>
+        <p>
+          Through roundtables, workshops, zines, symposia, and informal gatherings, we create spaces to share knowledge, build confidence, and support each other.
+        </p>
+        
+        <div class="bg-white/60 p-8 rounded-3xl border border-white mt-10 text-center shadow-sm hover:shadow-md transition duration-300">
+          <p class="text-xl font-bold text-girt-dark mb-6">Whether you are a researcher, student, developer, artist, streamer, organizer, or simply curious about games: you are welcome here.</p>
+          <button onclick="showPage('join', document.querySelectorAll('.nav-link')[4])" class="inline-block bg-girt-pink hover:bg-fuchsia-600 text-white font-bold text-lg py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+            Join the Community 💌
+          </button>
+        </div>
+
+        <!-- Upcoming & Pitching -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div class="bg-girt-bg2/70 p-8 rounded-3xl border border-white shadow-sm hover:bg-girt-bg2/90 transition">
+            <div class="text-3xl mb-3">📅</div>
+            <h3 class="font-display font-bold text-2xl text-girt-dark mb-2">What are we doing now?</h3>
+            <p class="text-girt-dark/80 text-base">We hold regular monthly roundtables! Check our Discord server for the exact date and topic of our next meetup. We'd love to see you there.</p>
+          </div>
+          <div class="bg-girt-bg1/70 p-8 rounded-3xl border border-white shadow-sm hover:bg-girt-bg1/90 transition">
+            <div class="text-3xl mb-3">💡</div>
+            <h3 class="font-display font-bold text-2xl text-girt-dark mb-2">Host a Session</h3>
+            <p class="text-girt-dark/80 text-base">We always welcome community members to host talks, workshops, or game club discussions. Got an idea? We can help you make it happen!</p>
+          </div>
+        </div>
+
+        <!-- Merged Contact Section -->
+        <div class="mt-12 pt-10 border-t border-girt-purple/10 text-center">
+          <h3 class="text-3xl font-display font-bold text-girt-dark mb-4">📬 Get in Touch</h3>
+          <p class="text-lg text-girt-dark/90 mb-6">Questions? Ideas? Want to pitch a workshop or collaborate?</p>
+          <a href="mailto:gamesintersectional@gmail.com" class="inline-block bg-white border-2 border-girt-purple/20 text-girt-purple text-xl md:text-2xl font-bold py-4 px-8 rounded-full hover:bg-girt-purple hover:text-white transition-all duration-300 shadow-md hover:-translate-y-1 mb-8">
+            gamesintersectional@gmail.com
+          </a>
+          
+          <div class="bg-blue-50/80 p-6 rounded-2xl border border-blue-100 max-w-2xl mx-auto shadow-sm text-left">
+            <h4 class="font-display font-bold text-blue-900 text-lg mb-2">Accessibility Feedback</h4>
+            <p class="text-blue-900/80 text-base">If there is anything we can do to make this website or our events more accessible for you, please let us know. We are always learning and want to improve.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="page-section glass-panel rounded-[2rem] p-8 md:p-12 space-y-12">
+      <div>
+        <div class="flex items-center gap-3 mb-6 border-b border-girt-purple/10 pb-4">
+          <span class="text-3xl">🌈</span>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark">About GIRT</h2>
+        </div>
+        
+        <div class="space-y-4 text-girt-dark/90 leading-relaxed">
+          <p>
+            Games Intersectional Roundtable (GIRT) supports marginalized individuals in video games and academia, including women, LGBTQ+ people, people of color, immigrants/displaced people, and people with disabilities.
+          </p>
+          <ul class="list-disc pl-6 space-y-2 marker:text-girt-pink">
+            <li>A community initiative based in Austria but open internationally.</li>
+            <li>A space for roundtables, workshops, reading/game clubs, informal gatherings, skill-sharing, and collaborative projects.</li>
+            <li>A non-hierarchical space for students, researchers, developers, artists, organizers, and curious people.</li>
+            <li>A community that values care, accessibility, equity, and intersectionality.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-3 mb-6 border-b border-girt-purple/10 pb-4">
+          <span class="text-3xl">✨</span>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark">Our Values</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-girt-pink text-xl mb-3">Intersectionality</h3>
+            <p class="text-base text-girt-dark/80">Rooted in Kimberlé Crenshaw's work and Black feminist thought, this acknowledges that different forms of oppression overlap. We center these interconnected realities rather than using it as a buzzword.</p>
+          </div>
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-blue-600 text-xl mb-3">Care over Competition</h3>
+            <p class="text-base text-girt-dark/80">We prioritize mutual support, emotional wellbeing, and trauma-informed interactions over academic or industry rivalries.</p>
+          </div>
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-purple-600 text-xl mb-3">Equity, not just Diversity</h3>
+            <p class="text-base text-girt-dark/80">Inviting underrepresented people to the table isn't enough; we focus on giving people the resources and safety they need to thrive.</p>
+          </div>
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-green-600 text-xl mb-3">Anti-Gatekeeping</h3>
+            <p class="text-base text-girt-dark/80">You don't need to be an "expert" or prove your marginalization to be here. Lived experience is deeply respected.</p>
+          </div>
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-orange-600 text-xl mb-3">Community-Led Learning</h3>
+            <p class="text-base text-girt-dark/80">Knowledge sharing flows in all directions in a non-hierarchical way.</p>
+          </div>
+          <div class="bg-white/60 p-6 rounded-2xl border border-white hover:bg-white/80 transition duration-300">
+            <h3 class="font-display font-bold text-teal-600 text-xl mb-3">Playfulness & Experimentation</h3>
+            <p class="text-base text-girt-dark/80">We love games! We value trying new things, making mistakes, and having fun together.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-3 mb-6 border-b border-girt-purple/10 pb-4">
+          <span class="text-3xl">🐸</span>
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark">GIRT Team</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="text-center group">
+            <img src="kseniia2.jpg" alt="Kseniia Harshina" class="w-32 h-32 mx-auto rounded-[2rem] object-cover shadow-md mb-4 border-4 border-white group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/200x200/ffd6ef/3c1053?text=K'">
+            <h3 class="font-bold text-lg font-display">Kseniia</h3>
+            <p class="text-sm text-girt-purple font-bold">(she/they)</p>
+          </div>
+          <div class="text-center group">
+            <img src="rachel.jpg" alt="Rachel Gorden" class="w-32 h-32 mx-auto rounded-[2rem] object-cover shadow-md mb-4 border-4 border-white group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/200x200/dbe7ff/3c1053?text=R'">
+            <h3 class="font-bold text-lg font-display">Rachel</h3>
+            <p class="text-sm text-girt-purple font-bold">(she/her)</p>
+          </div>
+          <div class="text-center group">
+            <img src="tan.jpg" alt="Tan Schuetz" class="w-32 h-32 mx-auto rounded-[2rem] object-cover shadow-md mb-4 border-4 border-white group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/200x200/e8ffe6/3c1053?text=T'">
+            <h3 class="font-bold text-lg font-display">Tan</h3>
+            <p class="text-sm text-girt-purple font-bold">(they/them)</p>
+          </div>
+          <div class="text-center group">
+            <img src="tom.jpg" alt="Tom Tucek" class="w-32 h-32 mx-auto rounded-[2rem] object-cover shadow-md mb-4 border-4 border-white group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/200x200/fff0f7/3c1053?text=Tom'">
+            <h3 class="font-bold text-lg font-display">Tom</h3>
+            <p class="text-sm text-girt-purple font-bold">(he/any)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="events" class="page-section glass-panel rounded-[2rem] p-8 md:p-12 space-y-10">
+      <div class="flex items-center gap-3 mb-6 border-b border-girt-purple/10 pb-4">
+        <span class="text-3xl">🗓️</span>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark">What We Do</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white/70 border border-pink-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float">🟣</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Monthly Roundtables</h3>
+          <p class="text-girt-dark/80 leading-relaxed">Our core meetups where members gather to discuss current projects, industry trends, and topics of shared interest in a safe, supportive setting.</p>
+        </div>
+        
+        <div class="bg-white/70 border border-cyan-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float" style="animation-delay: 0.5s;">🎮</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Game / Reading Club</h3>
+          <p class="text-girt-dark/80 leading-relaxed">We select and discuss games, essays, and literature that resonate with our community's focus on inclusivity, accessibility, and representation.</p>
+        </div>
+        
+        <div class="bg-white/70 border border-purple-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float" style="animation-delay: 1s;">🛠️</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Workshops & Skills</h3>
+          <p class="text-girt-dark/80 leading-relaxed">Community-led practical sessions covering a range of topics, from creative writing to coding basics and portfolio building.</p>
+        </div>
+        
+        <div class="bg-white/70 border border-green-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float" style="animation-delay: 1.5s;">🌍</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Online & Hybrid</h3>
+          <p class="text-girt-dark/80 leading-relaxed">While based in Austria, we host digital events via Discord and GatherTown to ensure our global community can connect and participate.</p>
+        </div>
+        
+        <div class="bg-white/70 border border-orange-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float" style="animation-delay: 2s;">🤝</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Peer Support</h3>
+          <p class="text-girt-dark/80 leading-relaxed">Providing guidance, navigating academia/industry barriers together, and offering a space to celebrate each other's successes.</p>
+        </div>
+        
+        <div class="bg-white/70 border border-yellow-100 rounded-3xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300">
+          <div class="text-4xl mb-4 emoji-float" style="animation-delay: 2.5s;">✨</div>
+          <h3 class="text-2xl font-display font-bold text-girt-dark mb-2">Projects & Symposia</h3>
+          <p class="text-girt-dark/80 leading-relaxed">Collaborative creative works, including our massive 2025 Symposium and community-authored Zines that document our shared knowledge.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gis25" class="page-section glass-panel rounded-[2rem] p-8 md:p-12 space-y-12">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-display font-bold text-girt-dark mb-3">GI Symposium 2025</h2>
+        <p class="text-xl text-girt-purple font-bold">Held September 19–20, 2025 • Online via GatherTown</p>
+        <div class="mt-4 inline-block bg-white/80 border border-green-200 text-green-800 px-6 py-2 rounded-full font-bold shadow-sm">
+          This event was completely free to attend.
+        </div>
+      </div>
+
+      <!-- GatherTown Memories (Moved to top) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <img src="gisGather.png" alt="GatherTown view of GIS25 audience" class="rounded-[2rem] shadow-sm w-full h-auto object-cover border-4 border-white hover:shadow-lg transition duration-300" onerror="this.src='https://placehold.co/600x400/e9fbff/3c1053?text=GatherTown+View+1'">
+        <img src="gisGather2.png" alt="GatherTown view of GIS25 lecture" class="rounded-[2rem] shadow-sm w-full h-auto object-cover border-4 border-white hover:shadow-lg transition duration-300" onerror="this.src='https://placehold.co/600x400/fff0f7/3c1053?text=GatherTown+View+2'">
+      </div>
+
+      <!-- Zine & Proceedings Callout -->
+      <div class="bg-white/80 border-l-8 border-girt-pink p-8 rounded-2xl shadow-sm">
+        <h3 class="text-2xl font-display font-bold text-girt-dark mb-4">📚 Proceedings & Zine</h3>
+        <p class="mb-6 text-girt-dark/80">The academic proceedings and community zine from the symposium are available in our archive.</p>
+        <div class="flex flex-wrap gap-4">
+          <a href="https://zenodo.org/communities/gi-symposium/records" target="_blank" class="bg-girt-dark hover:bg-girt-purple text-white font-bold py-3 px-8 rounded-full transition-all shadow-md hover:shadow-lg">
+            View Proceedings on Zenodo
+          </a>
+          <a href="zine.pdf" download class="bg-white border-2 border-girt-pink text-girt-pink font-bold py-3 px-8 rounded-full hover:bg-pink-50 transition-all">Download Zine (PDF, 51 MB)</a>
+        </div>
+      </div>
+
+      <!-- Rachel's Posters Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <img src="1.png" alt="GIS25 Day 1 Schedule Poster" class="rounded-[2rem] shadow-sm w-full h-auto object-cover border-4 border-white hover:shadow-lg transition duration-300" onerror="this.src='https://placehold.co/600x800/ffd6ef/3c1053?text=Day+1+Poster'">
+        <img src="2.png" alt="GIS25 Day 2 Schedule Poster" class="rounded-[2rem] shadow-sm w-full h-auto object-cover border-4 border-white hover:shadow-lg transition duration-300" onerror="this.src='https://placehold.co/600x800/dbe7ff/3c1053?text=Day+2+Poster'">
+      </div>
+
+      <!-- About the Symposium Text -->
+      <div class="space-y-8 bg-white/50 p-8 rounded-[2rem] border border-white">
+        <h3 class="text-3xl font-display font-bold text-girt-dark border-b border-girt-purple/10 pb-4">🎮 About the Symposium</h3>
+        
+        <div>
+          <h4 class="font-display font-bold text-2xl text-girt-pink mb-3">What is intersectionality?</h4>
+          <p class="text-girt-dark/90 mb-4 leading-relaxed">Intersectionality is a concept developed by legal scholar Kimberlé Crenshaw to describe how different forms of oppression, like racism, sexism, ableism, classism, and more, don’t act separately, but overlap and reinforce each other. A queer migrant woman will face different challenges than a white disabled man or a neurodivergent trans person — because systems of oppression are interconnected.</p>
+          <p class="text-girt-dark/90 leading-relaxed">We believe designing inclusive spaces means recognizing those intersections — and also our limitations. We know that intersectionality was not coined for white academics, but as a framework rooted in the lived experiences and resistance of Black women and other women of color. We aim to honor that origin by working to create spaces where underrepresented voices are not only heard, but centered.</p>
+        </div>
+
+        <div>
+          <h4 class="font-display font-bold text-2xl text-girt-pink mb-3">What is a symposium?</h4>
+          <p class="text-girt-dark/90 leading-relaxed">A symposium is a gathering where people come together to share ideas, experiences, and projects — usually through presentations, discussions, and workshops. At Games Intersectional, our symposium is: a place to present your work (in whatever format you like) and a space to exchange ideas with others across disciplines and perspectives.</p>
+        </div>
+
+        <div>
+          <h4 class="font-display font-bold text-2xl text-girt-pink mb-3">Why this symposium?</h4>
+          <p class="text-girt-dark/90 leading-relaxed">The GI Symposium is a space for marginalized voices in games to connect, create, and reflect — whether through research, storytelling, design, or community practice. We are not here to reproduce gatekeeping or hierarchy. We’re here to share knowledge, build care-based networks, and open doors for each other.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div class="bg-white/80 p-6 rounded-2xl border border-white shadow-sm">
+            <h4 class="font-display font-bold text-xl mb-4 text-girt-purple">Topics & Tracks</h4>
+            <ul class="list-disc pl-5 space-y-2 text-base text-girt-dark/80">
+              <li><strong>Playing with Power:</strong> labor, oppression, subverting systems</li>
+              <li><strong>Decolonize the Game:</strong> Indigenous design, non-Western stories</li>
+              <li><strong>Intersectional Realities:</strong> queerness, migration, race, disability</li>
+              <li><strong>Games of Care:</strong> trauma-informed design, mutual aid</li>
+              <li><strong>Games of Resistance:</strong> activist games, radical worldbuilding</li>
+              <li><strong>Accessibility:</strong> inclusive design, access as praxis</li>
+              <li><strong>Meta Reflection:</strong> pedagogy, writing from the margins</li>
+              <li><strong>Open Track:</strong> If you don't fit into a box!</li>
+            </ul>
+          </div>
+          
+          <div class="bg-white/80 p-6 rounded-2xl border border-white shadow-sm">
+            <h4 class="font-display font-bold text-xl mb-4 text-girt-purple">Formats & Contributions</h4>
+            <ul class="list-disc pl-5 space-y-2 text-base text-girt-dark/80">
+              <li>Presentation & Workshop</li>
+              <li>Panel Discussion</li>
+              <li>Game Demo & Interactive Art</li>
+              <li>Creative Writing & Reflective Essay</li>
+              <li>Community Project</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12">
+        <h3 class="text-3xl font-display font-bold text-girt-dark border-b border-girt-purple/10 pb-4 mb-8">🗓️ Archived Programme</h3>
+        
+        <h4 class="text-2xl font-display font-bold text-girt-pink mt-6 mb-4">Friday, 19 September 2025</h4>
+        <ul class="schedule">
+          <li class="slot">
+            <div class="when">10:00 – 10:20</div>
+            <div>
+              <div class="title">Conference Opening</div>
+              <div class="meta"><span class="chip opening">Opening</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">10:20 – 10:55</div>
+            <div>
+              <div class="title">Queering Play and Playing Queer in <em>The Sims 4</em></div>
+              <div class="speaker">Nic Kilzer</div>
+              <div class="meta"><span class="chip talk">Talk</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">10:55 – 11:30</div>
+            <div>
+              <div class="title">The Role of the (Queer) Body in Role‑Playing Practices</div>
+              <div class="speaker">Alex</div>
+              <div class="meta"><span class="chip talk">Talk</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">11:30 – 12:05</div>
+            <div>
+              <div class="title">Customizable* Character Creators in Games</div>
+              <div class="speaker">Eileen Carette</div>
+              <div class="meta"><span class="chip talk">Talk</span> <span class="chip demo">Game Demo</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">13:00 – 13:35</div>
+            <div>
+              <div class="title">Game Design Justice: Towards a Community‑led Practice</div>
+              <div class="speaker">Erin List</div>
+              <div class="meta"><span class="chip art">Interactive Art</span> <span class="chip talk">Talk</span> <span class="chip panel">Panel</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">13:35 – 14:10</div>
+            <div>
+              <div class="title">In Other Bodies — Inhabiting the Nonhuman Body</div>
+              <div class="speaker">Flo Schäfer</div>
+              <div class="meta"><span class="chip talk">Talk</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">14:10 – 15:25</div>
+            <div>
+              <div class="title">Intrapology</div>
+              <div class="speaker">Zoyander Street and team</div>
+              <div class="meta"><span class="chip performance">Performance</span></div>
+            </div>
+          </li>
+        </ul>
+
+        <h4 class="text-2xl font-display font-bold text-girt-pink mt-12 mb-4">Saturday, 20 September 2025</h4>
+        <ul class="schedule">
+          <li class="slot">
+            <div class="when">11:00 – 11:35</div>
+            <div>
+              <div class="title">Social Innovation and Video Games</div>
+              <div class="speaker">Milica Marković</div>
+              <div class="meta"><span class="chip case">Case Study</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">11:35 – 12:10</div>
+            <div>
+              <div class="title">Disruption through Strategic Game Design</div>
+              <div class="speaker">Srikanth</div>
+              <div class="meta"><span class="chip essay">Reflective Essay</span> <span class="chip talk">Presentation</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">12:10 – 12:45</div>
+            <div>
+              <div class="title">Congratulations, You’ve Chosen Poorly</div>
+              <div class="speaker">Laura</div>
+              <div class="meta"><span class="chip essay">Reflective Essay</span> <span class="chip art">Creative Writing</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">13:40 – 14:15</div>
+            <div>
+              <div class="title">No Diversity, No Games: Why Inclusion Is No Longer Optional</div>
+              <div class="speaker">Jack Gutmann</div>
+              <div class="meta"><span class="chip talk">Talk</span> <span class="chip panel">Panel Discussion</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">14:15 – 14:50</div>
+            <div>
+              <div class="title">Ascension Day</div>
+              <div class="speaker">Ricardo</div>
+              <div class="meta"><span class="chip demo">Game Demo</span> <span class="chip performance">Performance</span></div>
+            </div>
+          </li>
+          <li class="slot">
+            <div class="when">14:50 – 15:25</div>
+            <div>
+              <div class="title">An Afternoon at Home: Playtest and Discussion</div>
+              <div class="speaker">Tan Schütz</div>
+              <div class="meta"><span class="chip demo">Game Demo</span> <span class="chip panel">Panel</span></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Symposium Organizing Committee -->
+      <div class="mt-12 bg-white/80 p-8 rounded-[2rem] border-2 border-girt-pink text-center shadow-sm">
+        <h3 class="font-display font-bold text-girt-pink text-2xl mb-3">GIS25 Organizing Committee</h3>
+        <p class="text-girt-dark/90 text-lg">
+          The 2025 symposium was made possible by the dedicated work of the full organizing committee:<br><br>
+          <span class="font-bold text-girt-purple">Kseniia Harshina, Rachel Gorden, Tan Schuetz, Tom Tucek, Shivi Vats, and Sara Skubiszewska.</span>
+        </p>
+      </div>
+    </section>
+
+    <section id="join" class="page-section glass-panel rounded-[2rem] p-8 md:p-12 space-y-8">
+      <div class="flex items-center gap-3 mb-6 border-b border-girt-purple/10 pb-4">
+        <span class="text-3xl">🤝</span>
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-girt-dark">Join Us</h2>
+      </div>
+      
+      <p class="text-xl text-girt-dark/90 font-bold">We would love to have you in our community! Here is how we manage our spaces:</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-girt-dark/90">
+        <div class="bg-white/60 p-6 rounded-2xl flex gap-4 items-start">
+          <div class="text-3xl mt-1">💌</div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-girt-dark mb-2">Reach Out</h3>
+            <p>To join, simply email us at <a href="mailto:gamesintersectional@gmail.com" class="text-girt-pink font-bold hover:underline">gamesintersectional@gmail.com</a>.</p>
+          </div>
+        </div>
+
+        <div class="bg-white/60 p-6 rounded-2xl flex gap-4 items-start">
+          <div class="text-3xl mt-1">🔒</div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-girt-dark mb-2">Safer Spaces</h3>
+            <p>Access to our Discord server requires reaching out to an organizer first. This helps us keep the space safer and intentional.</p>
+          </div>
+        </div>
+
+        <div class="bg-white/60 p-6 rounded-2xl flex gap-4 items-start">
+          <div class="text-3xl mt-1">💜</div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-girt-dark mb-2">No "Proof" Required</h3>
+            <p>You do not need to "prove" your marginalization to participate. We trust you. If you feel this space is for you, you are welcome.</p>
+          </div>
+        </div>
+
+        <div class="bg-white/60 p-6 rounded-2xl flex gap-4 items-start">
+          <div class="text-3xl mt-1">🌻</div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-girt-dark mb-2">Allies Welcome</h3>
+            <p>Allies are very welcome to join and learn, provided they come with respect, humility, and care for marginalized folks.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center py-8 mt-auto text-girt-dark/60 text-sm font-bold tracking-wide">
+    <p>· Hosted by Games Intersectional · GitHub Pages ·</p>
+  </footer>
+
+  <script>
+    // Simple SPA routing logic with smooth transitions
+    function showPage(pageId, clickedButton) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.page-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+        // Slight delay to allow fade out before removing from flow (optional, simplified here)
+      });
+
+      // Show the targeted section
+      const targetSection = document.getElementById(pageId);
+      if (targetSection) {
+        // small timeout allows the display:block to apply before opacity transitions
+        setTimeout(() => {
+          targetSection.classList.add('active');
+        }, 50);
+      }
+
+      // Update active state on nav links
+      const links = document.querySelectorAll('.nav-link');
+      links.forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // If a button was passed, make it active
+      if (clickedButton) {
+        clickedButton.classList.add('active');
+      }
+      
+      // Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
